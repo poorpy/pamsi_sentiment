@@ -12,3 +12,9 @@ with open(abs_file_path, 'r+') as f:
         dictionary[int(key)] = val
 
 labels = {}
+abs_file_path = os.path.join(srcript_dir, rel_path_label)
+with open(abs_file_path, 'r') as f:
+    for line in f:
+        (key, val) = line.split("|")
+        labels[int(key)] = float(val)
+
