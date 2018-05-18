@@ -1,29 +1,29 @@
 import os
-# import numpy as np
-
+import nltk
+from nltk.corpus import stopwords
 srcript_dir = os.path.dirname(__file__)
-rel_path_dict = "st/dictionary.txt"
-rel_path_label = "st/sentiment_labels.txt"
-abs_file_path = os.path.join(srcript_dir, rel_path_dict)
+snip_rel_path = "st/original_rt_snippets.txt"
+abs_file_path = os.path.join(srcript_dir, snip_rel_path)
 
-dictionary = {}
-with open(abs_file_path, 'r+') as f:
-    for line in f:
-        (val, key) = line.split("|")
-        if len(val.split()) == 1:
-            dictionary[int(key)] = [val.split()]
 
-labels = {}
-abs_file_path = os.path.join(srcript_dir, rel_path_label)
-with open(abs_file_path, 'r') as f:
-    for line in f:
-        (key, val) = line.split("|")
-        if int(key) in dictionary:
-            labels[int(key)] = float(val.strip())
+nltk.download('stopwords')
+stop = stopwords.words('english')
 
-# dictionary_arr = np.array()
-# for key, val in dictionary:
-    # for word in val:
-        # dictionary_arr.append((word, labels[key]))
 
-# filtered_dict = {}
+def get_tokens(file):
+    tokens = []
+    with open(file, 'r+') as f:
+        for line in f:
+            tokens.append(nltk.word_tokenize(line))
+    return sum(tokens, [])
+
+
+def get_filtered_tokens(token_list):
+    filtered_tokens = []
+    for w in token_list:
+        if w not in stop:
+            filtered_tokens.append(w)
+    return filtered_tokens
+
+
+print(get_filtered_tokens(get_tokens(abs_file_path)))
