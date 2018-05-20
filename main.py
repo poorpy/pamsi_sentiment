@@ -1,17 +1,14 @@
 import numpy
-import read
 from keras.datasets import imdb
-from keras.models import Sequential
 from keras.layers import Dense, Flatten
 from keras.layers.embeddings import Embedding
+from keras.models import Sequential
 from keras.preprocessing import sequence
 
 # fixed seed
 
 seed = 7
 numpy.random.seed(seed)
-print(len(read.dictionary))
-print(len(read.labels))
 top_words = 5000
 (X_train, Y_train), (X_test, Y_test) = imdb.load_data(num_words=top_words)
 

@@ -47,5 +47,4 @@ def get_tokens(file):
             tokens.append(erase_common_words(line))
     return sum(tokens, [])
 
-
-print(get_tokens(abs_file_path))
+# print(get_tokens(abs_file_path))
