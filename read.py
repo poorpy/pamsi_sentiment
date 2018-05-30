@@ -1,7 +1,11 @@
-import os, pickle
+import os
+import pickle
+
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import EnglishStemmer
+from nltk.tokenize import word_tokenize
+
+# nltk.download('punkt') to dowload if not found
 
 script_dir = os.path.dirname(__file__)
 snip_rel_path = "st/datasetSentences.txt"
@@ -13,7 +17,7 @@ phrase_abs_path = os.path.join(script_dir, phrase_rel_path)
 stop_words = stopwords.words('english')
 snowball_stemmer = EnglishStemmer()
 
-
+print('begin')
 def tokenize_file(file, delim, positon=1):
     tmp_sentences = []
     tmp_rest = []
@@ -38,4 +42,6 @@ for sentence in tokenized_sentences:
         tuples_to_dump.append((sentence, phrase_ids[
             tokenized_sentences.index(sentence)]))
 
+print(tuples_to_dump)
+print('dupa')
 pickle.dump(tuples_to_dump, open("zdania_i_id", "wb"))
