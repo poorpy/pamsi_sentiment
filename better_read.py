@@ -1,13 +1,14 @@
 import os
 
-from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.text import Tokenizer, text_to_word_sequence
 
 srcript_dir = os.path.dirname(__file__)
-snip_rel_path = "st/original_rt_snippets.txt"
+snip_rel_path = "zdania.txt"
 abs_file_path = os.path.join(srcript_dir, snip_rel_path)
 
 T = Tokenizer()
 docs = open(abs_file_path, 'r+')
+
 T.fit_on_texts(docs)
 
 # with open(abs_file_path, 'r+') as f:
@@ -23,6 +24,10 @@ print(T.document_count)
 print('Slownik:')
 print(T.word_docs)
 
-encoded_docs = T.texts_to_sequences(docs)
+second_docs = open(abs_file_path, 'r+')
+
+docs_list = [line for line in second_docs]
+
+encoded_docs = [text_to_word_sequence(line, lower=False, split=" ") for line in docs_list]
 print('Zakdowane rzeczy:')
-print(encoded_docs)
+# print(encoded_docs)
