@@ -33,9 +33,11 @@ def tokenize_file(file, delim, positon=1):
                          if index != positon])
         filtered_sentence = [w.lower() for w in tokens
                              if w.lower() not in stop_words and w.isalpha()]
-        tmp_sentences.append(list(
-            map(snowball_stemmer.stem, filtered_sentence)
-        ))
+        tmp_sentences.append(filtered_sentence)
+    #    for sentence in tmp_sentences:
+    #        for word in sentence:   # Bo nie umiem tych triczkow z mapa xD
+    #            snowball_stemmer.stem(word)
+    map(snowball_stemmer.stem, tmp_sentences)  # Moze umiem? kto wie?
     return tmp_sentences, tmp_rest
 
 
@@ -57,6 +59,7 @@ def count_blank_lines(file):
                 print("found an end of line %d", i)
 
 
+# Function below should be replaced/refractored? :P
 def create_sentiments(sentiment_filename, old_sentiment_filename):
     id_sen = {}
     with open(old_sentiment_filename, "r") as sen:
@@ -68,10 +71,12 @@ def create_sentiments(sentiment_filename, old_sentiment_filename):
             sen_dump.write(str(id_sen[str(ID)]))
 
 
+# We don't need this main? :P
 if __name__ == "__main__":
     tokenized_sentences = tokenize_file(snip_abs_path, "\t")[0]
     save_sentences(sentence_file_name, tokenized_sentences)
 
+    # TODO : Good(readable! XD) function finding sentiment for sentence
     (tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
     ids_to_dump = []
     for sentence in tokenized_sentences:
@@ -80,4 +85,4 @@ if __name__ == "__main__":
                 tokenized_sentences.index(sentence)]))
 
     create_sentiments(new_sentiment_filename, sentiment_abs_path)
-    count_blank_lines(sentence_file_name, )
+    count_blank_lines(sentence_file_name)  # Function only for debugging
