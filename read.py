@@ -13,8 +13,12 @@ snip_abs_path = os.path.join(script_dir, snip_rel_path)
 phrase_rel_path = "st/dictionary.txt"
 phrase_abs_path = os.path.join(script_dir, phrase_rel_path)
 
+sentiment_rel_path = "st/sentiment_labels.txt"
+sentiment_abs_path = os.path.join(script_dir, sentiment_rel_path)
+
 stop_words = stopwords.words('english')
 snowball_stemmer = EnglishStemmer()
+
 
 def tokenize_file(file, delim, positon=1):
     tmp_sentences = []
@@ -39,14 +43,26 @@ with open("zdania.txt", "w") as f:
         for word in sentence:
             str_sentence += (word + " ")
         f.write(str_sentence + "\n")
-# (tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
-# tuples_to_dump = []
-# for sentence in tokenized_sentences:
-    # if sentence in tokenized_phrases:
-        # tuples_to_dump.append((sentence, phrase_ids[
-            # tokenized_sentences.index(sentence)]))
 
-# pickle.dump(tuples_to_dump, open("zdania_i_id", "w"))
+
+(tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
+ids_to_dump = []
+for sentence in tokenized_sentences:
+    if sentence in tokenized_phrases:
+        ids_to_dump.append((phrase_ids[
+            tokenized_sentences.index(sentence)]))
+
+sentiment = []
+id_sen = {}
+with open(sentiment_abs_path, "r") as sen:
+    for line in sen:
+        ID, sen = line.split("|")
+        id_sen.update({ID: sen})
+
+with open("sentiment.txt", "w") as sen_dump:
+    for ID in ids_to_dump:
+        sen_dump.write(str(id_sen[str(ID)]))
+
 # (tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
 # tuples_to_dump = []
 # for sentence in tokenized_sentences:
