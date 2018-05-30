@@ -27,49 +27,47 @@ def tokenize_file(file, delim, positon=1):
     tmp_sentences = []
     tmp_rest = []
     for line in open(file, 'r'):
+        # split line into tokens, take only meaningful part
         tokens = word_tokenize(line.split(delim)[positon])
+
+        # put all not intresting parts of line into tmp_rest
         tmp_rest.extend([int(item.strip('\n')) for index, item
-                         in enumerate(line.split(delim))
-                         if index != positon])
+                         in enumerate(line.split(delim)) if index != positon])
+
+        # filter out all stopwords
         filtered_sentence = [w.lower() for w in tokens
                              if w.lower() not in stop_words and w.isalpha()]
-        tmp_sentences.append(filtered_sentence)
-    #    for sentence in tmp_sentences:
-    #        for word in sentence:   # Bo nie umiem tych triczkow z mapa xD
-    #            snowball_stemmer.stem(word)
-    map(snowball_stemmer.stem, tmp_sentences)  # Moze umiem? kto wie?
+
+        # to tmp_sentences append stemmed sentence
+        tmp_sentences.append([snowball_stemmer.stem(word)
+                              for word in filtered_sentence])
+
+    # filter out all empty sentences
+    tmp_sentences = [sentence for sentence in tmp_sentences if sentence]
     return tmp_sentences, tmp_rest
 
 
 def save_sentences(file, sentences):
     with open(file, "w") as f:
         for sentence in sentences:
-            str_sentence = ""
-            for word in sentence:
-                str_sentence += (word + " ")
-            f.write(str_sentence + "\n")
+            f.write(" ".join(sentence) + "\n")
 
 
 def count_blank_lines(file):
     with open(file, "r") as f:
-        i = 0
-        for line in f:
-            if line == '\n':
-                i += 1
-                print("found an end of line %d", i)
+        print(sum(line.isspace() for line in f))
 
 
-# Function below should be replaced/refractored? :P
-def create_sentiments(sentiment_filename, old_sentiment_filename):
-    id_sen = {}
-    with open(old_sentiment_filename, "r") as sen:
-        for line in sen:
-            ID, sen = line.split("|")
-            id_sen.update({ID: sen})
+def create_sentiments(sentiment_filename, old_sentiment_filename, id_to_match):
+    with open(old_sentiment_filename, "r") as old_sentiment:
+        id_sen = dict(line.split("|") for line in old_sentiment)
     with open(sentiment_filename, "w") as sen_dump:
-        for ID in ids_to_dump:
-            sen_dump.write(str(id_sen[str(ID)]))
+        for ID in id_to_match:
+            sen_dump.write(id_sen[str(ID)])
 
+
+def filter_ids():
+    pass
 
 # We don't need this main? :P
 if __name__ == "__main__":
