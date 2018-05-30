@@ -1,5 +1,5 @@
 import os
-import pickle
+
 from nltk.corpus import stopwords
 from nltk.stem.snowball import EnglishStemmer
 from nltk.tokenize import word_tokenize
@@ -62,6 +62,14 @@ with open(sentiment_abs_path, "r") as sen:
 with open("sentiment.txt", "w") as sen_dump:
     for ID in ids_to_dump:
         sen_dump.write(str(id_sen[str(ID)]))
+
+with open("zdania.txt", "r") as f:
+    i = 0
+    for line in f:
+        if line == '\n':
+            i += 1
+            print("found an end of line %d", i)
+
 
 # (tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
 # tuples_to_dump = []
