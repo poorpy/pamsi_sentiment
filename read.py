@@ -58,29 +58,25 @@ def count_blank_lines(file):
         print(sum(line.isspace() for line in f))
 
 
-def create_sentiments(sentiment_filename, old_sentiment_filename, id_to_match):
-    with open(old_sentiment_filename, "r") as old_sentiment:
+def read_sentiment(sentiment_filename):
+    with open(sentiment_filename, "r") as old_sentiment:
         id_sen = dict(line.split("|") for line in old_sentiment)
-    with open(sentiment_filename, "w") as sen_dump:
-        for ID in id_to_match:
-            sen_dump.write(id_sen[str(ID)])
+    return id_sen
 
 
-def filter_ids():
-    pass
+def filter_ids(sentence_token_list, phrase_token_dict):
+    return_dict = {}
+    for token in sentence_token_list:
+        if str(token) in phrase_token_dict:
+            return_dict.update({str(token): phrase_token_dict[str(token)]})
+    return return_dict
 
-# We don't need this main? :P
+
 if __name__ == "__main__":
     tokenized_sentences = tokenize_file(snip_abs_path, "\t")[0]
-    save_sentences(sentence_file_name, tokenized_sentences)
-
-    # TODO : Good(readable! XD) function finding sentiment for sentence
-    (tokenized_phrases, phrase_ids) = tokenize_file(phrase_abs_path, "|", 0)
-    ids_to_dump = []
-    for sentence in tokenized_sentences:
-        if sentence in tokenized_phrases:
-            ids_to_dump.append((phrase_ids[
-                tokenized_sentences.index(sentence)]))
-
-    create_sentiments(new_sentiment_filename, sentiment_abs_path)
-    count_blank_lines(sentence_file_name)  # Function only for debugging
+    tokenized_phrases, phrase_ids = tokenize_file(phrase_abs_path, "|", 0)
+    phrase_id_dict = {str(key): value for key, value
+                      in zip(tokenized_phrases, phrase_ids)}
+    sentence_id_dict = filter_ids(tokenized_sentences, phrase_id_dict)
+    id_sentiment_dict = read_sentiment(sentiment_abs_path)
+    # TODO: get sentiment from id_sentiment_dict
