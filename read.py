@@ -20,7 +20,7 @@ stop_words = stopwords.words('english')
 snowball_stemmer = EnglishStemmer()
 
 sentence_file_name = "zdania.txt"
-new_sentiment_filename = "sentiment.txt"
+sentiment_file_name = "sentiment.txt"
 
 
 def tokenize_file(file, delim, positon=1):
@@ -60,7 +60,7 @@ def count_blank_lines(file):
 
 def read_sentiment(sentiment_filename):
     with open(sentiment_filename, "r") as old_sentiment:
-        id_sen = dict(line.split("|") for line in old_sentiment)
+        id_sen = dict(line.strip("\n").split("|") for line in old_sentiment)
     return id_sen
 
 
@@ -72,6 +72,12 @@ def filter_ids(sentence_token_list, phrase_token_dict):
     return return_dict
 
 
+def save_value_to_file(dict_to_save, value_file):
+    with open(value_file, "w") as v:
+        for value in dict_to_save.values():
+            v.write(value + "\n")
+
+
 if __name__ == "__main__":
     tokenized_sentences = tokenize_file(snip_abs_path, "\t")[0]
     tokenized_phrases, phrase_ids = tokenize_file(phrase_abs_path, "|", 0)
@@ -79,4 +85,7 @@ if __name__ == "__main__":
                       in zip(tokenized_phrases, phrase_ids)}
     sentence_id_dict = filter_ids(tokenized_sentences, phrase_id_dict)
     id_sentiment_dict = read_sentiment(sentiment_abs_path)
-    # TODO: get sentiment from id_sentiment_dict
+    sentence_sentiment_dict = {key: id_sentiment_dict[
+        str(sentence_id_dict[key])] for key in sentence_id_dict}
+    save_sentences(sentence_file_name, tokenized_sentences)
+    save_value_to_file(sentence_sentiment_dict, sentiment_file_name)
