@@ -31,15 +31,18 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
-batch_size = 10
-X_train = X_train[:5]
-Y_train = Y_train[:5]
-X_test = X_test[:5]
-Y_test = Y_test[:5]
-# batch_size = 32
-model.fit(X_train, Y_train, epochs=3, batch_size=batch_size, verbose=2)
+# batch_size = 10
+# X_train = X_train[:3000]
+# Y_train = Y_train[:3000]
+# X_test = X_test[:3000]
+# Y_test = Y_test[:3000]
+
+batch_size = 32
+model.fit(X_train, Y_train, epochs=50, batch_size=batch_size, verbose=2)
 
 validation_size = 1500
+# validation_size = 5
+#validation_size = 1000
 
 X_validate = X_test[-validation_size:]
 Y_validate = Y_test[-validation_size:]
