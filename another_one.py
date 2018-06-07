@@ -21,6 +21,7 @@ model = Sequential()
 model.add(Embedding(max_features, embed_dim, input_length=X.shape[1]))
 model.add(SpatialDropout1D(0.4))
 model.add(LSTM(lstm_out, dropout=0.2, recurrent_dropout=0.2))
+model.add(Dense(200, activation='sigmoid'))
 model.add(Dense(84, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
@@ -30,8 +31,13 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
-batch_size = 32
-model.fit(X_train, Y_train, epochs=7, batch_size=batch_size, verbose=2)
+batch_size = 10
+X_train = X_train[:5]
+Y_train = Y_train[:5]
+X_test = X_test[:5]
+Y_test = Y_test[:5]
+# batch_size = 32
+model.fit(X_train, Y_train, epochs=3, batch_size=batch_size, verbose=2)
 
 validation_size = 1500
 
@@ -44,5 +50,8 @@ Y_test = Y_test[:-validation_size]
 # print("acc: %.2f" % (acc))
 # print("Accuracy: %.2f%%" % (scores[1]*100))
 
-scores = model.evaluate(X_test, Y_test, verbose=0)
-print("Accuracy: %.2f%%" % (scores[1] * 100))
+scores = model.evaluate(X_train, Y_train, batch_size=batch_size, verbose=0)
+print("Accuracy training: %.2f%%" % (scores[1] * 100))
+
+scores = model.evaluate(X_test, Y_test, batch_size=batch_size, verbose=0)
+print("Accuracy test: %.2f%%" % (scores[1] * 100))
