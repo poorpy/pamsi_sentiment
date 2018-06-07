@@ -1,6 +1,7 @@
 from keras.layers import Dense, Flatten
 from keras.layers.embeddings import Embedding
 from keras.models import Sequential
+from keras.preprocessing.sequence import pad_sequences
 
 import better_read
 
@@ -11,12 +12,15 @@ import better_read
 top_words = 5000
 # (X_train, Y_train), (X_test, Y_test) = imdb.load_data(num_words=top_words)
 
-max_words = 100
+max_words = 500
 # X_train = sequence.pad_sequences(X_train, maxlen=max_words)
 # X_test = sequence.pad_sequences(X_test, maxlen=max_words)
 
 (X1_train, Y1_train), (X1_test, Y1_test) = (better_read.encoded_docs, better_read.sent_list), (
 better_read.encoded_docs, better_read.sent_list)
+
+X1_train = pad_sequences(X1_train, maxlen=max_words)
+X1_test = pad_sequences(X1_train, maxlen=max_words)
 
 print(X1_train.shape)
 

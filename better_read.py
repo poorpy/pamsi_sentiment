@@ -1,6 +1,5 @@
 import os
 
-from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 
 srcript_dir = os.path.dirname(__file__)
@@ -17,9 +16,9 @@ second_docs = open(abs_file_path, 'r+')
 docs_list = [line for line in second_docs]
 
 encoded_docs = T.texts_to_sequences(docs_list)
-encoded_docs = pad_sequences(encoded_docs, maxlen=100)
+# encoded_docs = pad_sequences(encoded_docs, maxlen=100)
 
-print(encoded_docs)
+# print(encoded_docs)
 
 snip_rel_path = "sentiment.txt"
 abs_file_path = os.path.join(srcript_dir, snip_rel_path)
